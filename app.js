@@ -9,7 +9,7 @@ const fetch=require('node-fetch')
 
 
 var slack_secret = 'b8c4c3f05e9a64070b8eb3da255d2c2e'
-var bot_oauth_token='xoxb-1931689096065-1942879663456-1UFEVWUbiBDN9Czzu7ScmgRX'
+var bot_oauth_token='xoxb-1931689096065-1942879663456-6LNywuk0sdzGcBcz2WZUAXNz'
 
 list =[]
 const receiver = new ExpressReceiver({ signingSecret: slack_secret });
@@ -45,7 +45,12 @@ function shuffleArray(array) {
       array[j] = temp;
   }
 }
+receiver.router.get('/', async (req, res) => {
+  var y = await fetch('https://picsum.photos/100')
+  //var x= await y.json()
+  res.send(y)
 
+})
 app.message('start jumble', async ({ message, say, client }) => {
   var b= await fetch('https://random-word-api.herokuapp.com/word?number=1');
   var a= await b.json(); 
@@ -133,23 +138,6 @@ app.command('/joke', async ({ command, ack, say }) =>
    await say("Did you see that coming? :wink:");
 });
 
-
-var game1run=false;
-async function game1({ message, next }) {
-  
-  if (game1run && message.text=='hi' && message.channel==aaa ) {
-    time++;
-    console.log(time)
-    if(time>1000) await next();
-  }
-}
-
-receiver.router.get('/', async (req, res) => {
-  var y= await fetch('https://collectionapi.metmuseum.org/public/collection/v1/objects/437133')
-      //var x= await y.json()
-      res.send(y)
-      
-})
 
 
 
@@ -262,17 +250,17 @@ app.command('/playguess', async ({ command, client,ack }) => {
   try {
     // Call chat.scheduleMessage with the built-in client
     const resulta = await client.conversations.create({
-      token:'xoxp-1931689096065-1925237933476-1949796901283-6993022615b9dd2d10098188493a1bfc',
+      token:'xoxp-1931689096065-1925237933476-1962800976065-b40d4795d847d52c6a440f246f405e92',
       name:'d',
     });
     aaa=resulta.channel.id
     const s=await client.conversations.invite({
-      token:'xoxp-1931689096065-1925237933476-1949796901283-6993022615b9dd2d10098188493a1bfc',
+      token:'xoxp-1931689096065-1925237933476-1962800976065-b40d4795d847d52c6a440f246f405e92',
       channel:aaa,
       users:'U01TQRVKHDE'
     })
     await client.conversations.invite({
-      token:'xoxp-1931689096065-1925237933476-1949796901283-6993022615b9dd2d10098188493a1bfc',
+      token:'xoxp-1931689096065-1925237933476-1962800976065-b40d4795d847d52c6a440f246f405e92',
       channel:aaa,
       users:command.user_id
     })
@@ -281,7 +269,7 @@ app.command('/playguess', async ({ command, client,ack }) => {
     //console.log(resulta);
 
     const results=await client.users.list({
-      token:'xoxp-1931689096065-1925237933476-1949796901283-6993022615b9dd2d10098188493a1bfc',
+      token:'xoxp-1931689096065-1925237933476-1962800976065-b40d4795d847d52c6a440f246f405e92',
 
     })
     console.log(results)
@@ -289,7 +277,7 @@ app.command('/playguess', async ({ command, client,ack }) => {
       if(!results.members[user].is_bot && str.search(results.members[user].real_name)!=-1)
       {var a=results.members[user].id;
       await client.conversations.invite({
-        token:'xoxp-1931689096065-1925237933476-1949796901283-6993022615b9dd2d10098188493a1bfc',
+        token:'xoxp-1931689096065-1925237933476-1962800976065-b40d4795d847d52c6a440f246f405e92',
         channel: aaa,
         users:results.members[user].id
       })
@@ -322,7 +310,7 @@ app.command('/endguess', async ({ message, client,ack }) => {
     const resulta = await client.conversations.archive({
       token:'xoxb-1931689096065-1942879663456-1UFEVWUbiBDN9Czzu7ScmgRX',
       channel:aaa
-    });
+    });aaa=0;
     console.log(resulta);
   }
   catch (error) {
@@ -330,6 +318,28 @@ app.command('/endguess', async ({ message, client,ack }) => {
   }
 });
 
+app.command('/image', async ({ command, client,ack }) => {
+  //var y = await fetch('https://picsum.photos/100')
+  //var x= await y.json()
+  if(command.channel_id!=aaa) return
+  min = Math.ceil(100);
+  max = Math.floor(200);
+  var num=Math.floor(Math.random() * (max - min) + min); 
+  await say({
+    "blocks": [
+			{"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": "Who is the person you can relate closest to here?"
+			},
+			"accessory": {
+				"type": "image",
+				"image_url": `https://picsum.photos/${num}`,
+				"alt_text": "alt text for image"
+			}}]
+		
+  })
+})
 
 
 
@@ -337,9 +347,7 @@ app.command('/endguess', async ({ message, client,ack }) => {
 
 
 
-
-
-
+/*
 receiver.router.get('/', (req, res) => {
   console.log('nice')
   if (req.query.code) {
@@ -402,9 +410,10 @@ receiver.router.get('/', (req, res) => {
       }).auth(process.env.clientID, process.env.clientSecret);
 
       return;
-
+/*
   }
   res.redirect('https://zoom.us/oauth/authorize?response_type=code&client_id=' + process.env.clientID + '&redirect_uri=' + process.env.redirectURL)
 })
 
 
+*/
